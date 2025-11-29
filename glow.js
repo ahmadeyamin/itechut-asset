@@ -16,6 +16,7 @@ let config = {
 
 let pointers = [];
 let splatStack = [];
+const SMOKE_COLOR = [1.0, 0.302, 0.0]; // #ff4d00 = rgb(255,77,0)
 
 const { gl, ext } = getWebGLContext(canvas);
 
@@ -37,7 +38,7 @@ function getWebGLContext(canvas) {
     supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear');
   }
 
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clearColor(1.0, 1.0, 1.0, 1.0);
 
   const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat.HALF_FLOAT_OES;
   let formatRGBA;
@@ -117,7 +118,7 @@ function pointerPrototype() {
   this.dy = 0;
   this.down = false;
   this.moved = false;
-  this.color = [30, 0, 300];
+  this.color = SMOKE_COLOR.slice(); // start with #ff4d00
 }
 
 pointers.push(new pointerPrototype());
@@ -602,12 +603,11 @@ function splat(x, y, dx, dy, color) {
 
 function multipleSplats(amount) {
   for (let i = 0; i < amount; i++) {
-    const color = [Math.random() * 10, Math.random() * 10, Math.random() * 10];
     const x = canvas.width * Math.random();
     const y = canvas.height * Math.random();
     const dx = 1000 * (Math.random() - 0.5);
     const dy = 1000 * (Math.random() - 0.5);
-    splat(x, y, dx, dy, color);
+    splat(x, y, dx, dy, SMOKE_COLOR);
   }
 }
 
@@ -642,7 +642,7 @@ canvas.addEventListener('touchmove', e => {
 
 canvas.addEventListener('mousemove', () => {
   pointers[0].down = true;
-  pointers[0].color = [Math.random() + 0.2, Math.random() + 0.2, Math.random() + 0.2];
+  pointers[0].color = SMOKE_COLOR.slice();
 });
 
 canvas.addEventListener('touchstart', e => {
@@ -656,7 +656,7 @@ canvas.addEventListener('touchstart', e => {
     pointers[i].down = true;
     pointers[i].x = touches[i].pageX;
     pointers[i].y = touches[i].pageY;
-    pointers[i].color = [Math.random() + 0.2, Math.random() + 0.2, Math.random() + 0.2];
+    pointers[i].color = SMOKE_COLOR.slice();
   }
 });
 
